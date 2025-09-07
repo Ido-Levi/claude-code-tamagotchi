@@ -269,6 +269,7 @@ All commands start with `/pet-` when used in Claude Code:
 - `/pet-stats` - Full report with care suggestions
 - `/pet-name Buddy` - Give your pet their perfect name
 - `/pet-help` - See all commands
+- `/pet-explain` - Explain what your pet is doing in the statusline
 - `/pet-reset` - Start over with a new pet (careful!)
 
 ### 2. CLI Commands (from any terminal!)
@@ -325,7 +326,8 @@ These aren't just random - they respond to context, mood, and what's happening i
 ## Configuration
 
 Your Tamagotchi is fully customizable! See the [complete configuration guide](docs/CONFIGURATION.md) for:
-- All environment variables
+- Statusline customization allows you to show/hide individual components (tokens, git, cost, etc.)
+- All environment variables and their effects
 - Personality presets (Sleepy, Drama Queen, Zen Master, etc.)
 - Multiple pets for different projects
 - Custom decay rates and thresholds

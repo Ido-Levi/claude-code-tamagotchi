@@ -60,6 +60,7 @@ create_command "pet-name"
 # pet-dress removed - accessories feature deprecated
 create_command "pet-reset"
 create_command "pet-help"
+create_command "pet-explain"
 
 # Create or update Claude Code settings for statusline
 echo ""
@@ -183,6 +184,7 @@ echo "   /pet-play [toy]  - Play with your pet"
 echo "   /pet-clean       - Give pet a bath"
 echo "   /pet-stats       - View detailed stats"
 echo "   /pet-help        - Show all commands"
+echo "   /pet-explain     - Explain what your pet is doing"
 echo ""
 echo "📊 Your pet will appear in the Claude Code statusline!"
 echo ""

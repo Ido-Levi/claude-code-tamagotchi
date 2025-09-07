@@ -99,6 +99,26 @@ The pet only updates during active Claude Code conversations, making it activity
 
 ## New Features (Latest Commit)
 
+### Enhanced Configurable Statusline System
+The statusline has been completely redesigned with a modular component architecture:
+
+**Features:**
+- **Individual component controls**: Each statusline element can be enabled/disabled
+- **Priority-based rendering**: Components render in configurable priority order  
+- **Graceful error handling**: Failed components are silently skipped
+- **Token tracking**: Smart estimation from Claude Code transcript files
+- **Git integration**: Branch detection with semantic coloring
+- **Cost/duration tracking**: API usage monitoring when available
+
+**New Environment Variables:**
+- `PET_SHOW_PET`, `PET_SHOW_STATS`, `PET_SHOW_TOKENS` - Component visibility controls
+- `PET_SHOW_GIT_BRANCH`, `PET_SHOW_COST`, `PET_SHOW_DURATION` - Additional components  
+- `PET_SHOW_DIRECTORY`, `PET_SHOW_MODEL`, `PET_SHOW_THOUGHTS` - More customization
+- `PET_TOKEN_THRESHOLD`, `PET_TOKEN_ESTIMATE_RATIO` - Token calculation tuning
+
+### New Commands
+- **`/pet-explain`**: Analyzes and explains the current statusline contents with debugging info
+
 ### AI-Powered Feedback System
 The pet can now watch Claude Code work and provide witty, contextual observations about what's happening. This uses Groq's fast LLM API to analyze conversation transcripts in real-time.
 

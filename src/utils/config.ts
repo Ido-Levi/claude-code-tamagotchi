@@ -1,3 +1,23 @@
+/**
+ * config.ts - Enhanced configuration system for Claude Code Tamagotchi
+ * 
+ * This module provides comprehensive configuration management for all aspects of the
+ * pet system. It supports environment variable overrides, path resolution, and
+ * validation of configuration values.
+ * 
+ * New Features Added:
+ * - Configurable statusline components (individual show/hide controls)
+ * - Enhanced feedback system configuration
+ * - Weather and seasonal effects
+ * - Animation and thought system tuning
+ * - Debug and logging controls
+ * 
+ * Configuration Sources (in priority order):
+ * 1. Environment variables (highest priority)
+ * 2. .env file in project root
+ * 3. Default values (fallback)
+ */
+
 import * as dotenv from 'dotenv';
 import * as path from 'path';
 import * as fs from 'fs';
@@ -9,7 +29,9 @@ if (fs.existsSync(envPath)) {
   dotenv.config({ path: envPath });
 }
 
-// Helper to resolve tilde in paths
+/**
+ * Helper to resolve tilde (~) in file paths to user's home directory
+ */
 function resolvePath(filepath: string): string {
   if (filepath.startsWith('~')) {
     return path.join(os.homedir(), filepath.slice(1));
@@ -32,6 +54,21 @@ export interface Config {
   // Environment
   weather: 'sunny' | 'rainy' | 'snowy' | 'cloudy';
   season: 'spring' | 'summer' | 'fall' | 'winter';
+  
+  // Statusline Components (all configurable)
+  showPet: boolean;
+  showStats: boolean;
+  showTokens: boolean;
+  showGitBranch: boolean;
+  showCost: boolean;
+  showDuration: boolean;
+  showDirectory: boolean;
+  showModel: boolean;
+  showThoughts: boolean;
+  
+  // Token tracking
+  tokenThreshold: number;
+  tokenEstimateRatio: number;
   
   // Decay rates (per minute)
   hungerDecayRate: number;
@@ -85,7 +122,9 @@ export interface Config {
 export const config: Config = {
   // Pet settings
   petName: process.env.PET_NAME || 'Buddy',
-  petType: (process.env.PET_TYPE as any) || 'dog',
+  petType: (['dog', 'cat', 'dragon', 'robot'].includes(process.env.PET_TYPE as string) 
+    ? process.env.PET_TYPE as 'dog' | 'cat' | 'dragon' | 'robot' 
+    : 'dog'),
   petColor: process.env.PET_COLOR || 'default',
   
   // Animation
@@ -95,8 +134,27 @@ export const config: Config = {
   walkingAnimationChance: parseFloat(process.env.WALKING_ANIMATION_CHANCE || '0.05'),
   
   // Environment
-  weather: (process.env.WEATHER as any) || 'sunny',
-  season: (process.env.SEASON as any) || 'spring',
+  weather: (['sunny', 'rainy', 'snowy', 'cloudy'].includes(process.env.WEATHER as string)
+    ? process.env.WEATHER as 'sunny' | 'rainy' | 'snowy' | 'cloudy'
+    : 'sunny'),
+  season: (['spring', 'summer', 'fall', 'winter'].includes(process.env.SEASON as string)
+    ? process.env.SEASON as 'spring' | 'summer' | 'fall' | 'winter'
+    : 'spring'),
+  
+  // Statusline Components (all configurable)
+  showPet: process.env.PET_SHOW_PET !== 'false',
+  showStats: process.env.PET_SHOW_STATS !== 'false',
+  showTokens: process.env.PET_SHOW_TOKENS !== 'false',
+  showGitBranch: process.env.PET_SHOW_GIT_BRANCH !== 'false',
+  showCost: process.env.PET_SHOW_COST !== 'false',
+  showDuration: process.env.PET_SHOW_DURATION !== 'false',
+  showDirectory: process.env.PET_SHOW_DIRECTORY !== 'false',
+  showModel: process.env.PET_SHOW_MODEL !== 'false',
+  showThoughts: process.env.PET_SHOW_THOUGHTS !== 'false',
+  
+  // Token tracking
+  tokenThreshold: parseInt(process.env.PET_TOKEN_THRESHOLD || '400000'),
+  tokenEstimateRatio: parseFloat(process.env.PET_TOKEN_ESTIMATE_RATIO || '4.0'),
   
   // Decay rates
   hungerDecayRate: parseFloat(process.env.HUNGER_DECAY_RATE || '0.5'),
@@ -115,7 +173,9 @@ export const config: Config = {
   
   // Feedback system
   feedbackEnabled: process.env.PET_FEEDBACK_ENABLED === 'true',
-  feedbackMode: (process.env.PET_FEEDBACK_MODE as any) || 'full',
+  feedbackMode: (['full', 'passive', 'off'].includes(process.env.PET_FEEDBACK_MODE as string)
+    ? process.env.PET_FEEDBACK_MODE as 'full' | 'passive' | 'off'
+    : 'full'),
   feedbackCheckInterval: parseInt(process.env.PET_FEEDBACK_CHECK_INTERVAL || '5'),
   feedbackBatchSize: parseInt(process.env.PET_FEEDBACK_BATCH_SIZE || '10'),
   feedbackMinMessages: parseInt(process.env.PET_FEEDBACK_MIN_MESSAGES || '3'),
@@ -131,7 +191,9 @@ export const config: Config = {
   angryThreshold: parseInt(process.env.PET_ANGRY_THRESHOLD || '5'),
   furiousThreshold: parseInt(process.env.PET_FURIOUS_THRESHOLD || '8'),
   praiseBoost: parseInt(process.env.PET_PRAISE_BOOST || '10'),
-  feedbackIconStyle: (process.env.PET_FEEDBACK_ICON_STYLE as any) || 'emoji',
+  feedbackIconStyle: (['emoji', 'ascii', 'minimal'].includes(process.env.PET_FEEDBACK_ICON_STYLE as string)
+    ? process.env.PET_FEEDBACK_ICON_STYLE as 'emoji' | 'ascii' | 'minimal'
+    : 'emoji'),
   feedbackRemarkLength: parseInt(process.env.PET_FEEDBACK_REMARK_LENGTH || '50'),
   showComplianceScore: process.env.PET_SHOW_COMPLIANCE_SCORE === 'true',
   feedbackMaxHistory: parseInt(process.env.PET_FEEDBACK_MAX_HISTORY || '200'),
@@ -147,6 +209,10 @@ export const config: Config = {
   enableLogging: process.env.ENABLE_LOGGING === 'true',  // Off by default
 };
 
+/**
+ * Get weather-based stat modifiers for the pet.
+ * Weather affects pet mood and energy levels to create more dynamic interactions.
+ */
 export function getWeatherEffects() {
   const effects = {
     sunny: { happiness: 0.1, energy: 0.2 },

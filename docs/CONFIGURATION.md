@@ -11,12 +11,26 @@ Your Tamagotchi is fully customizable through environment variables! Set these i
 | `PET_NAME` | `Buddy` | Your pet's default name (can change with `/pet-name`) |
 | `PET_TYPE` | `dog` | Pet type (dog, cat, dragon, robot) |
 
-### 📊 Display Options
+### 📊 Statusline Components
 | Variable | Default | Description |
 |----------|---------|-------------|
-| `PET_SHOW_DIRECTORY` | `true` | Show current directory in statusline |
-| `PET_SHOW_SESSION` | `false` | Show session update counter |
-| `PET_SHOW_MODEL` | `true` | Show Claude model name in statusline |
+| `PET_SHOW_PET` | `true` | Show pet face and animation |
+| `PET_SHOW_STATS` | `true` | Show hunger/energy/cleanliness/happiness stats |
+| `PET_SHOW_TOKENS` | `true` | Show token count and context percentage |
+| `PET_SHOW_DIRECTORY` | `true` | Show current directory name |
+| `PET_SHOW_GIT_BRANCH` | `true` | Show git branch with colored indicators |
+| `PET_SHOW_MODEL` | `true` | Show Claude model name |
+| `PET_SHOW_COST` | `true` | Show estimated API cost |
+| `PET_SHOW_DURATION` | `true` | Show response duration |
+| `PET_SHOW_THOUGHTS` | `true` | Show pet thoughts and messages |
+| `PET_SHOW_SESSION` | `false` | Show session update counter in stats |
+
+### 🪙 Token Tracking
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `PET_TOKEN_THRESHOLD` | `400000` | Context window size for percentage calculations |
+| `PET_TOKEN_ESTIMATE_RATIO` | `4.0` | Characters per token estimation ratio |
+
 
 ### ⏱️ Decay Rates (How Fast Stats Drop)
 | Variable | Default | Description |
@@ -61,6 +75,41 @@ Your Tamagotchi is fully customizable through environment variables! Set these i
 | `PET_VIOLATION_CHECK_ENABLED` | `true` | Enable/disable violation checking |
 | `PET_ANNOYED_THRESHOLD` | `3` | Violations before pet gets annoyed |
 | `PET_ANGRY_THRESHOLD` | `5` | Violations before pet gets angry |
+
+## Statusline Customization Examples 🎨
+
+### Minimal Statusline
+Just the pet and stats:
+```bash
+export PET_SHOW_TOKENS=false
+export PET_SHOW_DIRECTORY=false
+export PET_SHOW_GIT_BRANCH=false
+export PET_SHOW_MODEL=false
+export PET_SHOW_COST=false
+export PET_SHOW_DURATION=false
+export PET_SHOW_THOUGHTS=false
+```
+
+### Developer Focus
+Code-centric information:
+```bash
+export PET_SHOW_PET=false
+export PET_SHOW_STATS=false
+export PET_SHOW_COST=false
+export PET_SHOW_DURATION=false
+# Keeps tokens, directory, git, model, thoughts
+```
+
+### Performance Monitor
+Track API usage and performance:
+```bash
+export PET_SHOW_PET=false
+export PET_SHOW_STATS=false
+export PET_SHOW_DIRECTORY=false
+export PET_SHOW_GIT_BRANCH=false
+export PET_SHOW_THOUGHTS=false
+# Keeps tokens, model, cost, duration
+```
 
 ## Personality Presets & Recipes 🧪
 
