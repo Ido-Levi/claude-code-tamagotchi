@@ -13,6 +13,8 @@
     "reset": "bun run scripts/reset-pet.ts",
     "build": "bun build src/index.ts --outdir=dist --target=node && bun build src/commands/cli.ts --outdir=dist/commands --target=node",
     "dev": "bun run --watch src/index.ts",
+    "test": "bun test",
+    "test:watch": "bun test --watch",
     "prepublishOnly": "bun run build"
   },
   "keywords": [

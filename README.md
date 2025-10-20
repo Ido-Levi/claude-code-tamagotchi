@@ -374,6 +374,32 @@ See the [complete troubleshooting guide](docs/TROUBLESHOOTING.md) for solutions 
 - Violation detection issues
 - Uninstalling instructions
 
+## Testing 🧪
+
+The project includes a comprehensive test suite with **67 unit tests** covering:
+
+- ✅ Violation detection (all 4 types)
+- ✅ Session isolation
+- ✅ Database operations
+- ✅ Behavior scoring
+- ✅ LLM response parsing
+- ✅ Pre-hook blocking logic
+
+### Running Tests
+
+```bash
+# Run all tests
+bun test
+
+# Run tests in watch mode
+bun test:watch
+
+# Run specific test file
+bun test tests/llm/GroqClient.test.ts
+```
+
+See [tests/README.md](tests/README.md) for detailed test documentation.
+
 ## Join the Pet Parent Community! 🌟
 
 We'd love to have you contribute! Whether it's:
