@@ -3,6 +3,8 @@ import { PetEngine } from './engine/PetEngine';
 import { config } from './utils/config';
 import * as path from 'path';
 import * as fs from 'fs';
+import * as os from 'os';
+import { execSync } from 'child_process';
 
 interface StatusLineInput {
   hook_event_name: string;
@@ -19,13 +21,32 @@ interface StatusLineInput {
   };
 }
 
+function getGitBranch(cwd: string): string | null {
+  try {
+    // Run git command to get current branch, suppress output
+    const branchName = execSync('git rev-parse --abbrev-ref HEAD', {
+      cwd,
+      encoding: 'utf8',
+      stdio: 'pipe', 
+    }).trim();
+    // Don't show if HEAD (detached)
+    if (branchName === 'HEAD') {
+      return null;
+    }
+    return branchName;
+  } catch (error) {
+    // Not a git repository or git is not installed
+    return null;
+  }
+}
+
 async function main() {
   try {
     // Log that we've been called with animation details (only if logging enabled)
     if (config.enableLogging) {
       const timestamp = Date.now();
       const logMessage = `Called at ${new Date().toISOString()} (${timestamp})\n`;
-      fs.appendFileSync('/tmp/pet-calls.log', logMessage);
+      fs.appendFileSync(path.join(os.tmpdir(), 'pet-calls.log'), logMessage);
     }
     
     // Read input from stdin (Claude Code provides this)
@@ -73,15 +94,23 @@ async function main() {
     const feedbackIcon = engine.getFeedbackIcon();
     
     // Build statusline output
-    // Format: [Pet Display] | [Stats] | [Directory] | [Model] | [Message or Thought]
+    // Format: [Pet Display] | [Stats] | [Directory (Branch)] | [Model] | [Message or Thought]
     let output = `${petDisplay} | ${stats}`;
     
-    // Add directory if enabled
+    // Add directory and git branch if enabled
     const showDirectory = process.env.PET_SHOW_DIRECTORY !== 'false';
     if (showDirectory) {
       const dirName = path.basename(cwd);
       const shortDir = dirName.length > 20 ? dirName.substring(0, 17) + '...' : dirName;
-      output += ` | 📁 ${shortDir}`;
+      
+      const showGit = process.env.PET_SHOW_GIT_BRANCH !== 'false';
+      const branchName = showGit ? getGitBranch(cwd) : null;
+      
+      let dirSegment = ` | 📁 ${shortDir}`;
+      if (branchName) {
+        dirSegment += ` (🌿 ${branchName})`;
+      }
+      output += dirSegment;
     }
     
     // Add model name if enabled (default: true)

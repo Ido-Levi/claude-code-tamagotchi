@@ -138,8 +138,8 @@ export const config: Config = {
   
   // Paths
   stateFile: resolvePath(process.env.PET_STATE_FILE || '~/.claude/pets/claude-pet-state.json'),
-  actionFile: resolvePath(process.env.PET_ACTION_FILE || '/tmp/pet-action.json'),
-  logFile: process.env.LOG_FILE || '/tmp/claude-pet.log',
+  actionFile: resolvePath(process.env.PET_ACTION_FILE || path.join(os.tmpdir(), 'pet-action.json')),
+  logFile: process.env.LOG_FILE || path.join(os.tmpdir(), 'claude-pet.log'),
   
   // Debug
   debugMode: process.env.DEBUG_MODE === 'true',
