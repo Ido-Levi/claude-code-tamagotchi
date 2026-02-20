@@ -3,6 +3,7 @@ import { PetEngine } from './engine/PetEngine';
 import { config } from './utils/config';
 import * as path from 'path';
 import * as fs from 'fs';
+import * as os from 'os';
 
 interface StatusLineInput {
   hook_event_name: string;
@@ -25,7 +26,7 @@ async function main() {
     if (config.enableLogging) {
       const timestamp = Date.now();
       const logMessage = `Called at ${new Date().toISOString()} (${timestamp})\n`;
-      fs.appendFileSync('/tmp/pet-calls.log', logMessage);
+      fs.appendFileSync(path.join(os.tmpdir(), 'pet-calls.log'), logMessage);
     }
     
     // Read input from stdin (Claude Code provides this)
